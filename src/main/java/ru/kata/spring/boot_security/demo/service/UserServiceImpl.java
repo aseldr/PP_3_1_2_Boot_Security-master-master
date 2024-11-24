@@ -16,9 +16,19 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.io.IOException;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
 
     @Autowired
     private UserRepository userRepository;
@@ -52,5 +62,34 @@ public class UserServiceImpl implements UserService {
         Authentication authentication = authenticationManager.authenticate(token);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         successUserHandler.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    @Override
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
+
+    @Override
+    public void updateUser(Long id, User user, List<String> roles) {
+        User updatedUser = findUserById(id);
+        updatedUser.setUsername(user.getUsername());
+        userRepository.save(updatedUser);
+    }
+
+    @Override
+    public User findUserById(Long id) {
+        User findUserById = findUserById(id);
+        return findUserById;
+    }
+
+    @Override
+    public Optional<User> updateUser(Long id, User user) {
+        return userRepository.findById(id);
+
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        userRepository.deleteById(id);
     }
 }

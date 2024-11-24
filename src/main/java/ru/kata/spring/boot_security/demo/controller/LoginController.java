@@ -29,17 +29,17 @@ public class LoginController {
 
     @GetMapping
     public String loginForm() {
-        return "login";
+        return "/login";
     }
 
     @PostMapping
     public String login(@RequestParam("email") String email, @RequestParam("password") String password, Model model, HttpServletRequest request, HttpServletResponse response) {
         try {
             UserServiceImpl.authenticateUser(email, password, request, response);
-            return null;  // redirection is handled in SuccessUserHandler
+            return null;
         } catch (BadCredentialsException | IOException e) {
             model.addAttribute("error", "Invalid email or password");
-            return "login";
+            return "/login";
         }
     }
 }
